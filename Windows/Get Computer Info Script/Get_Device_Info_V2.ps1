@@ -24,6 +24,20 @@ gpresult /H $gpResultFile
 $hardwareInfoFile = "$outputDir\HardwareInfo_$computerName.txt"
 Get-CimInstance CIM_ComputerSystem | Out-File -Append $hardwareInfoFile
 Add-Content -Path $hardwareInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
+
+#Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum | ForEach-Object {$_.Sum / 1GB} | Out-File -Append $hardwareInfoFile
+# Calculate total RAM in GB and append "RAM: <value>GB"
+$totalRAM = Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum | ForEach-Object { [math]::Round($_.Sum / 1GB, 2) }
+Add-Content -Path $hardwareInfoFile -Value "RAM: $totalRAM GB"
+
+# Append RAM speed and model number
+$ramModules = Get-CimInstance Win32_PhysicalMemory
+foreach ($module in $ramModules) {
+    # Append RAM details with speed and model number
+    Add-Content -Path $hardwareInfoFile -Value "RAM Speed: $($module.Speed) MHz, Model: $($module.PartNumber)"
+}
+
+Add-Content -Path $hardwareInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
 Get-CimInstance CIM_BIOSElement | Out-File -Append $hardwareInfoFile
 Add-Content -Path $hardwareInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
 Get-CimInstance CIM_Processor | Out-File -Append $hardwareInfoFile
