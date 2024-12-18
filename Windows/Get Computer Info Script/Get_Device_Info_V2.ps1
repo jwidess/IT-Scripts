@@ -1,4 +1,7 @@
 # Script to gather system and domain information, and compress it into a .zip file
+Write-Host "----------------------------"
+Write-Host "Starting info gather..." -ForegroundColor Blue
+Write-Host "----------------------------"
 
 # Define output directory and files
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
