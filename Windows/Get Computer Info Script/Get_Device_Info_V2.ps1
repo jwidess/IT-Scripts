@@ -29,6 +29,8 @@ Get-CimInstance Win32_LogicalDisk | Out-File -Append $hardwareInfoFile
 Add-Content -Path $hardwareInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
 wmic cpu list /format:list | Out-File -Append $hardwareInfoFile
 Add-Content -Path $hardwareInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
+Get-CimInstance Win32_VideoController | Out-File -Append $hardwareInfoFile
+Add-Content -Path $hardwareInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
 
 # Gather network configuration
 $networkInfoFile = "$outputDir\NetworkInfo_$computerName.txt"
