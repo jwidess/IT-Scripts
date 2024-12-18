@@ -11,6 +11,14 @@ $computerName = $env:COMPUTERNAME
 $zipFile = $scriptDir + "\" + "SystemInfo_" + $computerName + "_" + $shortDate + ".zip"
 #$zipFile = "$scriptDir\SystemInfo_$computerName_$shortDate.zip"
 
+# Check if the output directory exists and clean it up if necessary
+if (Test-Path -Path $outputDir) {
+    $files = Get-ChildItem -Path $outputDir
+    if ($files) {
+        Remove-Item -Path $outputDir\* -Recurse -Force
+    }
+}
+
 # Ensure the output directory exists
 if (!(Test-Path -Path $outputDir)) {
     New-Item -ItemType Directory -Path $outputDir | Out-Null
@@ -72,9 +80,13 @@ Compress-Archive -Path $outputDir\* -DestinationPath $zipFile
 # Cleanup - Remove the temporary directory if compression is successful
 if (Test-Path -Path $zipFile) {
     Remove-Item -Path $outputDir -Recurse -Force
+	
+	# Open file explorer with path of output zip
+	Start-Process -FilePath "explorer.exe" -ArgumentList "/select,`"$zipFile`""
 }
 
 Write-Host "----------------------------"
-Write-Host "Information has been gathered and saved to $zipFile" -ForegroundColor Green
+Write-Host "Information has been gathered and saved to: "
+Write-Host "$zipFile" -ForegroundColor Green
 Write-Host "----------------------------"
 pause
