@@ -50,7 +50,13 @@ Get-CimInstance CIM_BIOSElement | Out-File -Append $hardwareInfoFile
 Add-Content -Path $hardwareInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
 Get-CimInstance CIM_Processor | Out-File -Append $hardwareInfoFile
 Add-Content -Path $hardwareInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
+# Disk Info
 Get-CimInstance Win32_LogicalDisk | Out-File -Append $hardwareInfoFile
+Add-Content -Path $hardwareInfoFile -Value "--- Get-PhysicalDisk Info ---`r`n"
+Get-PhysicalDisk | Select-Object DeviceID, MediaType, Model, SerialNumber, BusType | Format-Table -AutoSize | Out-File -Append $hardwareInfoFile
+Add-Content -Path $hardwareInfoFile -Value "--- Get-CimInstance -ClassName Win32_DiskDrive Info ---`r`n"
+Get-CimInstance -ClassName Win32_DiskDrive | Select-Object DeviceID, MediaType, Model, SerialNumber | Out-File -Append $hardwareInfoFile
+
 Add-Content -Path $hardwareInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
 wmic cpu list /format:list | Out-File -Append $hardwareInfoFile
 Add-Content -Path $hardwareInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
