@@ -1,13 +1,15 @@
-# Prompt for the username
-Write-Host "This script will grant the user full control permissions to their user folder" -ForegroundColor Green
-$username = Read-Host "Enter the AD logon name such as `"admin`" or `"jon`""
-
 # Define the file server's base directory
 $baseDir = "\\fnds01\Personnel"
+
+# Prompt for the username
+Write-Host "This script will grant the user full control permissions to their user folder" -ForegroundColor Green
+Write-Host "Base Directory to Create User Folder in: $baseDir" -ForegroundColor Cyan
+$username = Read-Host "Enter the AD logon name such as `"admin`" or `"jon`""
 
 # Construct the user's folder path
 $userFolder = Join-Path -Path $baseDir -ChildPath $username
 Write-Host "User Folder: $userFolder"
+pause
 
 # Check if the folder exists
 if (!(Test-Path -Path $userFolder)) {
