@@ -40,8 +40,8 @@ $authTypesRequiringMFA = @(
 )
 
 Write-Host "Retrieving users from Microsoft Graph..." -ForegroundColor Cyan
-$users = Get-MgUser | Select-Object UserPrincipalName, Id
-Write-Host ("Found {0} users. Gathering MFA status, this may take a while..." -f $users.Count) -ForegroundColor Yellow
+$users = Get-MgUser -Filter "accountEnabled eq true" | Select-Object UserPrincipalName, Id
+Write-Host ("Found {0} Enabled users. Gathering MFA status, this may take a while..." -f $users.Count) -ForegroundColor Yellow
 
 $userCount = $users.Count
 $current = 0
