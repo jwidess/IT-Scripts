@@ -4,7 +4,7 @@ $excludedSuffixes = @('lan', 'local', 'home', 'domain', 'corp', 'workgroup')
 $dnsSuffixes = Get-DnsClient |
     Where-Object { $_.ConnectionSpecificSuffix -and $_.ConnectionSpecificSuffix -ne "" } |
     Select-Object -ExpandProperty ConnectionSpecificSuffix -Unique |
-    Where-Object { $_ -notin $excludedSuffixes -and $_ -notmatch '^(lan|local|home|domain|corp|workgroup)$' }
+    Where-Object { $_ -notin $excludedSuffixes }
 if ($dnsSuffixes) {
     Write-Host "Found Connection-specific DNS Suffix(es):" -ForegroundColor Green
     foreach ($suffix in $dnsSuffixes) {
