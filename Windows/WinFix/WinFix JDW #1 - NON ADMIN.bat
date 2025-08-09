@@ -1,5 +1,8 @@
 @echo off
 color 09
+
+:: Credit to: WinFix script for LinusTechTips forum members made by 191x7
+
 title WinFix Script
 echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 echo ! The script contains 4 procedures.
