@@ -1,8 +1,10 @@
-# This PS1 Script takes a list of CVEs and queries NIST CVE API for info
+# This PS1 Script takes a list of CVEs and queries the NIST CVE API for info
+# https://nvd.nist.gov/developers/vulnerabilities
+# Replace $CVEString with your own list of CVEs, separated by pipes (|).
 # Returns info inline and in a .csv file 
 # Script was generated with ChatGPT
 
-$CVEString = "CVE-2022-31813|CVE-2017-3167|CVE-2017-7679"  # Input string with pipe-separated CVEs
+$CVEString = "CVE-2022-31813|CVE-2017-3167|CVE-2017-7679"  # Input string with pipe-separated CVEs (change as needed)
 $CVEList = $CVEString -split "\|"  # Split the string into an array
 $TotalCVEs = $CVEList.Count
 
@@ -40,7 +42,8 @@ foreach ($CVE in $CVEList) {
             if ($CVEData.metrics.cvssMetricV31) {
                 $Severity = $CVEData.metrics.cvssMetricV31[0].cvssData.baseSeverity
                 $CVSSScore = $CVEData.metrics.cvssMetricV31[0].cvssData.baseScore
-            } elseif ($CVEData.metrics.cvssMetricV2) {
+            }
+            elseif ($CVEData.metrics.cvssMetricV2) {
                 $Severity = $CVEData.metrics.cvssMetricV2[0].baseSeverity
                 $CVSSScore = $CVEData.metrics.cvssMetricV2[0].cvssData.baseScore
             }
@@ -53,7 +56,8 @@ foreach ($CVE in $CVEList) {
             }
 
             Write-Host "    -> Severity: $Severity (CVSS Score: $CVSSScore)" -ForegroundColor Green
-        } else {
+        }
+        else {
             $Results += [PSCustomObject]@{
                 CVE         = $CVE
                 Severity    = "Not Found"
@@ -63,7 +67,8 @@ foreach ($CVE in $CVEList) {
 
             Write-Host "    -> No data found for $CVE" -ForegroundColor Red
         }
-    } catch {
+    }
+    catch {
         Write-Host "    -> Error retrieving $CVE - $($_.Exception.Message)" -ForegroundColor Red
         $Results += [PSCustomObject]@{
             CVE         = $CVE
@@ -83,3 +88,5 @@ $Results | Export-Csv -Path "CVE_Report.csv" -NoTypeInformation -Encoding UTF8
 $Results | Format-Table -AutoSize
 
 Write-Host "`nCVE report saved as 'CVE_Report.csv'" -ForegroundColor Cyan
+
+pause
