@@ -1,4 +1,21 @@
-# Script to gather system and domain information, and compress it into a .zip file
+# Get_Device_Info_V2.ps1
+# ---------------------------------------------
+# This script gathers system, hardware, network, and domain information
+# from a Windows computer, saves the results to text and HTML files, and
+# compresses them into a single .zip archive.
+#
+# Information collected includes:
+#   - Group Policy results (gpresult)
+#   - Hardware info (CPU, RAM, BIOS, Disks, GPU)
+#   - Network configuration (ipconfig, route)
+#   - Operating system details
+#
+# Usage:
+#   - Run this script as a local administrator for best results.
+#   - The output .zip file will be created in the same directory as the script.
+#   - Temporary files are cleaned up after compression.
+# ---------------------------------------------
+
 Write-Host "----------------------------"
 Write-Host "Starting info gather..." -ForegroundColor Blue
 Write-Host "----------------------------"
@@ -9,18 +26,12 @@ $outputDir = "$scriptDir\SystemInfo"
 $shortDate = (Get-Date -Format "MM-dd-yyyy")
 $computerName = $env:COMPUTERNAME
 $zipFile = $scriptDir + "\" + "SystemInfo_" + $computerName + "_" + $shortDate + ".zip"
-#$zipFile = "$scriptDir\SystemInfo_$computerName_$shortDate.zip"
 
-# Check if the output directory exists and clean it up if necessary
+# Ensure the output directory is empty and exists
 if (Test-Path -Path $outputDir) {
-    $files = Get-ChildItem -Path $outputDir
-    if ($files) {
-        Remove-Item -Path $outputDir\* -Recurse -Force
-    }
+    Remove-Item -Path $outputDir\* -Recurse -Force
 }
-
-# Ensure the output directory exists
-if (!(Test-Path -Path $outputDir)) {
+else {
     New-Item -ItemType Directory -Path $outputDir | Out-Null
 }
 
@@ -50,6 +61,7 @@ Get-CimInstance CIM_BIOSElement | Out-File -Append $hardwareInfoFile
 Add-Content -Path $hardwareInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
 Get-CimInstance CIM_Processor | Out-File -Append $hardwareInfoFile
 Add-Content -Path $hardwareInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
+
 # Disk Info
 Get-CimInstance Win32_LogicalDisk | Out-File -Append $hardwareInfoFile
 Add-Content -Path $hardwareInfoFile -Value "--- Get-PhysicalDisk Info ---`r`n"
@@ -70,25 +82,25 @@ Add-Content -Path $networkInfoFile -Value "-------------------------------------
 route print | Out-File -Append $networkInfoFile
 Add-Content -Path $networkInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
 
-# Gather operating system information
+# Gather OS info
 $osInfoFile = "$outputDir\OSInfo_$computerName.txt"
 Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object Version, Caption | Out-File $osInfoFile
 Add-Content -Path $osInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
 Get-ComputerInfo | Out-File -Append $osInfoFile
 Add-Content -Path $osInfoFile -Value "---------------------------------------------------------------------------------------------------`r`n"
 
-# Compress the collected files into a .zip file
+# Compress the collected files into a .zip
 if (Test-Path -Path $zipFile) {
     Remove-Item -Path $zipFile -Force
 }
 Compress-Archive -Path $outputDir\* -DestinationPath $zipFile
 
-# Cleanup - Remove the temporary directory if compression is successful
+# Remove the temp dir if compression is successful
 if (Test-Path -Path $zipFile) {
     Remove-Item -Path $outputDir -Recurse -Force
-	
-	# Open file explorer with path of output zip
-	Start-Process -FilePath "explorer.exe" -ArgumentList "/select,`"$zipFile`""
+    
+    # Open file explorer with path of output zip
+    Start-Process -FilePath "explorer.exe" -ArgumentList "/select,`"$zipFile`""
 }
 
 Write-Host "----------------------------"
