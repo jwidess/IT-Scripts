@@ -1,16 +1,24 @@
+# Check_Domain_Response.ps1
+# ---------------------------------------------
+# This script helps troubleshoot Active Directory domain connectivity and DNS issues.
+# It displays network DNS suffixes, prompts for a domain name, and runs:
+#   - nslookup for AD SRV records
+#   - nltest to get domain controller details
+# ---------------------------------------------
 
 # Display all network Connection-specific DNS Suffixes
 $excludedSuffixes = @('lan', 'local', 'home', 'domain', 'corp', 'workgroup')
 $dnsSuffixes = Get-DnsClient |
-    Where-Object { $_.ConnectionSpecificSuffix -and $_.ConnectionSpecificSuffix -ne "" } |
-    Select-Object -ExpandProperty ConnectionSpecificSuffix -Unique |
-    Where-Object { $_ -notin $excludedSuffixes }
+Where-Object { $_.ConnectionSpecificSuffix -and $_.ConnectionSpecificSuffix -ne "" } |
+Select-Object -ExpandProperty ConnectionSpecificSuffix -Unique |
+Where-Object { $_ -notin $excludedSuffixes }
 if ($dnsSuffixes) {
     Write-Host "Found Connection-specific DNS Suffix(es):" -ForegroundColor Green
     foreach ($suffix in $dnsSuffixes) {
         Write-Host (" - $suffix") -ForegroundColor Cyan
     }
-} else {
+}
+else {
     Write-Host "No useful Connection-specific DNS Suffix found." -ForegroundColor Red
 }
 

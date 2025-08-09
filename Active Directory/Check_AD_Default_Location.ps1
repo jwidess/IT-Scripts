@@ -1,3 +1,9 @@
+# Check_AD_Default_Location.ps1
+# ---------------------------------------------
+# This script checks and displays the default Active Directory containers
+# for new users and computers in the current domain.
+# ---------------------------------------------
+
 # Import Active Directory module
 Import-Module ActiveDirectory
 
