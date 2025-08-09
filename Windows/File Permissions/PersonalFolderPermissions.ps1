@@ -1,5 +1,19 @@
+# PersonalFolderPermissions.ps1
+# ---------------------------------------------
+# This script grants a specified user full control permissions to their personal folder
+# on a file server. If the folder does not exist, it will be created.
+#
+# Usage:
+#   - Run the script in PowerShell.
+#   - Enter the AD logon name (username) when prompted (e.g., "admin" or "jon").
+#   - The script will create the folder if needed and set NTFS permissions for the user.
+#   - The script displays the updated ACLs for verification.
+#
+# Note: You must have permission to modify folders and ACLs on the target file server.
+# ---------------------------------------------
+
 # Define the file server's base directory
-$baseDir = "\\fnds01\Personnel"
+$baseDir = "\\myfileserver\Personal"
 
 # Prompt for the username
 Write-Host "This script will grant the user full control permissions to their user folder" -ForegroundColor Green
@@ -16,7 +30,8 @@ if (!(Test-Path -Path $userFolder)) {
     Write-Host "Folder does not exist. Creating folder..." -ForegroundColor Yellow
     New-Item -ItemType Directory -Path $userFolder | Out-Null
     Write-Host "Folder created: $userFolder" -ForegroundColor Green
-} else {
+}
+else {
     Write-Host "Folder already exists: $userFolder" -ForegroundColor Cyan
 }
 
@@ -35,7 +50,8 @@ try {
     Set-Acl -Path $userFolder -AclObject $acl
 
     Write-Host "Full control permissions granted to $username on $userFolder" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "Error assigning permissions: $_" -ForegroundColor Red
     exit
 }
@@ -56,7 +72,8 @@ try {
         Write-Host "Propagation: $($_.PropagationFlags)"
         Write-Host "--------------------------------------------"
     }
-} catch {
+}
+catch {
     Write-Host "Error retrieving ACLs: $_" -ForegroundColor Red
 }
 

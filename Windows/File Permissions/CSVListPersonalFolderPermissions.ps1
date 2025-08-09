@@ -1,14 +1,28 @@
+# CSVListPersonalFolderPermissions.ps1
+# =================================================================================================
+# This script reads a CSV file containing a list of usernames and grants each user full control
+# permissions to their personal folder on a file server.
+# 
+# Expected CSV file format:
+# ------------------------
+# username
+# user1
+# user2
+# user3
+#
+# The CSV must have a header row named 'username' and one username per line below it.
+# =================================================================================================
+
 Write-Host "This script will grant the list of users full control permissions to their user folder" -ForegroundColor Green
 
 # Define the file server's base directory
-$baseDir = "\\fnds01\Personnel"
+$baseDir = "\\myfileserver\Personal"
 
 # Path to the CSV file containing the usernames
 # $csvPath = "C:\path\to\your\users.csv"
 $csvPath = Read-Host "Enter the path to the CSV File to use (Path only no `"quotes`")"
 Write-Host "Path = $csvPath" -ForegroundColor Cyan
 
-# Import the CSV file
 $users = Import-Csv -Path $csvPath
 
 # Display the list of users from the CSV file
@@ -16,7 +30,7 @@ Write-Host "---------------------------------------"
 Write-Host "Users to be processed:" -ForegroundColor Cyan
 $users | ForEach-Object { Write-Host $_.username }
 Write-Host "---------------------------------------"
-# Prompt to continue
+
 $confirmation = Read-Host "Do you want to continue processing these users? (Y/N)"
 if ($confirmation -ne "Y") {
     Write-Host "Operation canceled." -ForegroundColor Red
@@ -26,7 +40,7 @@ if ($confirmation -ne "Y") {
 # Loop through each user in the CSV file
 foreach ($user in $users) {
     $username = $user.username
-	Write-Host "---------------------------------------"
+    Write-Host "---------------------------------------"
     Write-Host "Processing user: $username" -ForegroundColor Blue
 
     # Construct the user's folder path
@@ -38,7 +52,8 @@ foreach ($user in $users) {
         Write-Host "Folder does not exist. Creating folder..." -ForegroundColor Yellow
         New-Item -ItemType Directory -Path $userFolder | Out-Null
         Write-Host "Folder created: $userFolder" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "Folder already exists: $userFolder" -ForegroundColor Cyan
     }
 
@@ -57,7 +72,8 @@ foreach ($user in $users) {
         Set-Acl -Path $userFolder -AclObject $acl
 
         Write-Host "Full control permissions granted to $username on $userFolder" -ForegroundColor Green
-    } catch {
+    }
+    catch {
         Write-Host "Error assigning permissions for $username : $_" -ForegroundColor Red
     }
 
@@ -76,7 +92,8 @@ foreach ($user in $users) {
             Write-Host "Propagation: $($_.PropagationFlags)"
             Write-Host "--------------------------------------------"
         }
-    } catch {
+    }
+    catch {
         Write-Host "Error retrieving ACLs for $userFolder : $_" -ForegroundColor Red
     }
 }
