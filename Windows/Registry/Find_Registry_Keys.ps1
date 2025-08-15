@@ -1,7 +1,7 @@
 # =============================================
 # Find_Registry_Keys.ps1
 # ---------------------------------------------
-# This script prompts the user for a search term, then searches the Windows
+# This script prompts for a search term, then searches the Windows
 # registry (HKLM and HKCU) for any registry key names containing that term.
 # Results are exported to a CSV file in the script folder.
 # ---------------------------------------------
@@ -13,7 +13,7 @@ Write-Host "Enter the registry search term: " -NoNewline -ForegroundColor Yellow
 $searchTerm = Read-Host
 
 # Define registry hives to search
-$hives = @("HKLM", "HKCU")
+$hives = @("HKLM", "HKCU") # Default common hives
 $results = @()
 $safeSearchTerm = $searchTerm -replace '[^a-zA-Z0-9_-]', '_'
 
@@ -32,6 +32,7 @@ foreach ($hive in $hives) {
     $spinner = @('|','/','-','\')
     $spinIndex = 0
     $searching = $true
+    $hiveStartTime = Get-Date
     $job = Start-Job -ScriptBlock {
         param($hive, $searchTerm)
         Get-ChildItem -Path "${hive}:\" -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.Name -like "*$searchTerm*" }
@@ -45,7 +46,9 @@ foreach ($hive in $hives) {
             $searching = $false
         }
     }
-    Write-Host "`rDone searching $hive." -ForegroundColor Cyan
+    $hiveEndTime = Get-Date
+    $hiveDuration = ($hiveEndTime - $hiveStartTime).TotalSeconds
+    Write-Host ("`rDone searching $hive. (" + [math]::Round($hiveDuration,2) + " seconds)") -ForegroundColor Cyan
     $output = Receive-Job -Id $job.Id
     Remove-Job -Id $job.Id
     foreach ($item in $output) {
