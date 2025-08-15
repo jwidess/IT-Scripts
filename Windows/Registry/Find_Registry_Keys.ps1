@@ -19,23 +19,39 @@ $outputFile = Join-Path $PSScriptRoot "RegistrySearchResults_$safeSearchTerm.csv
 
 foreach ($hive in $hives) {
     Write-Host "Searching in $hive..." -ForegroundColor Cyan
-    try {
-        Get-ChildItem -Path "${hive}:\" -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
-            if ($_.Name -like "*$searchTerm*") {
-                $results += [PSCustomObject]@{
-                    Hive    = $hive
-                    KeyPath = $_.Name
-                }
-            }
+    $spinner = @('|','/','-','\')
+    $spinIndex = 0
+    $searching = $true
+    $job = Start-Job -ScriptBlock {
+        param($hive, $searchTerm)
+        Get-ChildItem -Path "${hive}:\" -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.Name -like "*$searchTerm*" }
+    } -ArgumentList $hive, $searchTerm
+
+    while ($searching) {
+        Write-Host -NoNewline ("`r" + $spinner[$spinIndex] + " Searching...") -ForegroundColor DarkGray
+        Start-Sleep -Milliseconds 150
+        $spinIndex = ($spinIndex + 1) % $spinner.Count
+        if ((Get-Job -Id $job.Id).State -ne 'Running') {
+            $searching = $false
         }
-    } catch {
-        Write-Host "Error searching ${hive}: $_" -ForegroundColor Red
+    }
+    Write-Host "`rDone searching $hive." -ForegroundColor Cyan
+    $output = Receive-Job -Id $job.Id
+    Remove-Job -Id $job.Id
+    foreach ($item in $output) {
+        $results += [PSCustomObject]@{
+            Hive    = $hive
+            KeyPath = $item.Name
+        }
     }
 }
 
 if ($results.Count -gt 0) {
     $results | Export-Csv -Path $outputFile -NoTypeInformation -Encoding UTF8
-    Write-Host "Results exported to $outputFile" -ForegroundColor Green
+    $uniqueResults = $results | Sort-Object KeyPath -Unique
+    $uniqueCount = $uniqueResults.Count
+    Write-Host "Results exported to: $outputFile" -ForegroundColor Green
+    Write-Host ("Unique entries found: " + $uniqueCount) -ForegroundColor Magenta
 } else {
     Write-Host "No matching registry keys found." -ForegroundColor Yellow
 }
