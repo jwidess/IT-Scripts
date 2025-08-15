@@ -15,7 +15,16 @@ $searchTerm = Read-Host "Enter the registry search term"
 $hives = @("HKLM", "HKCU")
 $results = @()
 $safeSearchTerm = $searchTerm -replace '[^a-zA-Z0-9_-]', '_'
-$outputFile = Join-Path $PSScriptRoot "RegistrySearchResults_$safeSearchTerm.csv"
+
+# Track start time
+$startTime = Get-Date
+$baseFileName = "RegistrySearchResults_$safeSearchTerm.csv"
+$outputFile = Join-Path $PSScriptRoot $baseFileName
+$fileIndex = 1
+while (Test-Path $outputFile) {
+    $outputFile = Join-Path $PSScriptRoot ("RegistrySearchResults_{0}_{1}.csv" -f $safeSearchTerm, $fileIndex)
+    $fileIndex++
+}
 
 foreach ($hive in $hives) {
     Write-Host "Searching in $hive..." -ForegroundColor Cyan
@@ -50,8 +59,11 @@ if ($results.Count -gt 0) {
     $results | Export-Csv -Path $outputFile -NoTypeInformation -Encoding UTF8
     $uniqueResults = $results | Sort-Object KeyPath -Unique
     $uniqueCount = $uniqueResults.Count
-    Write-Host "Results exported to: $outputFile" -ForegroundColor Green
+    $endTime = Get-Date
+    $duration = ($endTime - $startTime).TotalSeconds
+    Write-Host "Results exported to $outputFile" -ForegroundColor Green
     Write-Host ("Unique entries found: " + $uniqueCount) -ForegroundColor Magenta
+    Write-Host ("Total search time: " + [math]::Round($duration,2) + " seconds") -ForegroundColor Blue
 } else {
     Write-Host "No matching registry keys found." -ForegroundColor Yellow
 }
