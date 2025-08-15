@@ -8,6 +8,11 @@
 # Author: Jwidess
 # =============================================
 
+# Display hives to be searched
+$hives = @("HKLM", "HKCU")
+Write-Host "Registry hives to be searched:" -ForegroundColor Cyan
+Write-Host ("  " + ($hives -join ", ")) -ForegroundColor White
+
 # Prompt for search term
 Write-Host "Enter the registry search term: " -NoNewline -ForegroundColor Yellow
 $searchTerm = Read-Host
