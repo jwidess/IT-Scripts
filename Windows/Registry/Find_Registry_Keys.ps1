@@ -14,7 +14,7 @@ Write-Host "Registry hives to be searched:" -ForegroundColor Cyan
 Write-Host ("  " + ($hives -join ", ")) -ForegroundColor White
 
 # Prompt for search term
-Write-Host "Enter the registry search term: " -NoNewline -ForegroundColor Yellow
+Write-Host "Enter the registry search term (case insensitive): " -NoNewline -ForegroundColor Yellow
 $searchTerm = Read-Host
 
 # Define registry hives to search
