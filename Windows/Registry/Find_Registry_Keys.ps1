@@ -9,7 +9,8 @@
 # =============================================
 
 # Prompt for search term
-$searchTerm = Read-Host "Enter the registry search term"
+Write-Host "Enter the registry search term: " -NoNewline -ForegroundColor Yellow
+$searchTerm = Read-Host
 
 # Define registry hives to search
 $hives = @("HKLM", "HKCU")
@@ -61,7 +62,7 @@ if ($results.Count -gt 0) {
     $uniqueCount = $uniqueResults.Count
     $endTime = Get-Date
     $duration = ($endTime - $startTime).TotalSeconds
-    Write-Host "Results exported to $outputFile" -ForegroundColor Green
+    Write-Host "Results exported to: $outputFile" -ForegroundColor Green
     Write-Host ("Unique entries found: " + $uniqueCount) -ForegroundColor Magenta
     Write-Host ("Total search time: " + [math]::Round($duration,2) + " seconds") -ForegroundColor Blue
 } else {
