@@ -1,5 +1,17 @@
+# =============================================
 # BackupToDrive.ps1
+# ---------------------------------------------
+# This script recursively backs up a set of directories to a specified location,
+# excluding paths based on directory list, search terms, and system file rules.
+# It removes NTFS permissions from copied files, and logs errors to CSV file.
+# ---------------------------------------------
+# Author: Jwidess
+# =============================================
 
+
+#!=============================================
+#! Modify the following parameters as needed!
+#!=============================================
 # List of directories to back up
 $SourceDirs = @(
     "M:\TestSource\FileToInclude"
@@ -11,11 +23,17 @@ $ExcludeDirs = @(
     "M:\TestSource\FileToInclude\Exclude Within"
 )
 
+# List of case-insensitive search terms to exclude
+$ExcludeTerms = @(
+    "OneDrive"
+)
+
 # Destination backup location
 $BackupLocation = "M:\Backup"
 
 # Path to error log CSV in backup location
 $ErrorLogPath = Join-Path $BackupLocation "BackupErrors.csv"
+#!=============================================
 
 # Track if any errors have occurred
 $ErrorOccurred = $false
@@ -24,8 +42,15 @@ $ErrorOccurred = $false
 function Is-Excluded {
     param($Path)
     # Exclude if path contains BOTH 'microsoft' and 'windows' (case-insensitive)
+    # This is to prevent backing up system-related files
     if ($Path -match '(?i)microsoft' -and $Path -match '(?i)windows') {
         return $true
+    }
+    # Exclude if path contains any term in $ExcludeTerms (case-insensitive)
+    foreach ($term in $ExcludeTerms) {
+        if ($Path -match ("(?i)" + [Regex]::Escape($term))) {
+            return $true
+        }
     }
     foreach ($Ex in $ExcludeDirs) {
         if ($Path -like "$Ex*") { return $true }
@@ -133,5 +158,5 @@ foreach ($SourceDir in $SourceDirs) {
     Write-Progress -Activity "Backing up files from $SourceDir" -Completed
 }
 
-Write-Host "Backup complete."
+Write-Host "Backup complete." -ForegroundColor Green
 pause
