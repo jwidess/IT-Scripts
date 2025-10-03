@@ -1,6 +1,9 @@
+# Users_Folder_Backup.ps1
+# ---------------------------------------------
 # This script is used for copying a Windows installs "Users" folder
 # without file permission structures to make migrating easier.
 # It excludes AppData folders and the whatever exclusions are defined below
+# ---------------------------------------------
 
 # Source Users folder to copy from (change as needed)
 $source = "E:\Users"

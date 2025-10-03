@@ -1,5 +1,4 @@
-# =============================================
-# List Installed Software to CSV.ps1
+# List_Installed_Software_CSV.ps1
 # ---------------------------------------------
 # This script collects a list of installed software
 # from both 32-bit and 64-bit registry locations, including user-specific
@@ -7,8 +6,7 @@
 # FriendlyName, Version, Publisher, PackageName, InstallDate, EstimatedSizeMB,
 # URLInfoAbout, Comments.
 # ---------------------------------------------
-# Author: Jwidess
-# =============================================
+
 
 # Get the current script directory
 $currentDir = Get-Location
@@ -19,7 +17,7 @@ $pcName = $env:COMPUTERNAME
 # Get the current date in MM-dd-yyyy format
 $currentDate = Get-Date -Format "MM-dd-yyyy"
 
-# Define the output file path with PC name and date appended
+# Define the output file path with PC name and date
 $outputFile = Join-Path -Path $currentDir -ChildPath "InstalledSoftware_${pcName}_$currentDate.csv"
 
 Write-Host "[INFO] Starting software inventory..." -ForegroundColor Cyan

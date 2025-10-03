@@ -1,8 +1,12 @@
+# GatherCVEInfoV2.ps1
+# ---------------------------------------------
 # This PS1 Script takes a list of CVEs and queries the NIST CVE API for info
 # https://nvd.nist.gov/developers/vulnerabilities
 # Replace $CVEString with your own list of CVEs, separated by pipes (|).
 # Returns info inline and in a .csv file 
-# Script was generated with ChatGPT
+# You will need to get your own API key from NIST and replace the placeholders below.
+# This script was generated with ChatGPT
+# ---------------------------------------------
 
 $CVEString = "CVE-2022-31813|CVE-2017-3167|CVE-2017-7679"  # Input string with pipe-separated CVEs (change as needed)
 $CVEList = $CVEString -split "\|"  # Split the string into an array

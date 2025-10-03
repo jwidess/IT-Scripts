@@ -1,8 +1,8 @@
-## ===============================
 # Get_MFA_User_Status.ps1
+# ---------------------------------------------
 # This script retrieves the MFA status of users in Microsoft Entra ID
 # and exports the results to a CSV file.
-## ===============================
+# ---------------------------------------------
 
 # Ensure Microsoft Graph is installed
 if (-not (Get-Module -ListAvailable -Name Microsoft.Graph)) {
@@ -75,7 +75,7 @@ $csvPath = ".\MFA-Audit-$dateStr.csv"
 Write-Host ("Exporting results to {0}..." -f $csvPath) -ForegroundColor Cyan
 $results | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
 
-# Sort the CSV by MFA_Registered, putting "No" first
+# Sort the CSV by MFA_Registered, "No" first
 $sortedResults = Import-Csv -Path $csvPath | Sort-Object @{Expression='MFA_Registered'; Descending=$false}, @{Expression='User'; Descending=$false}
 $sortedResults | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
 Write-Host ("Done! Results saved to {0}" -f $csvPath) -ForegroundColor Green

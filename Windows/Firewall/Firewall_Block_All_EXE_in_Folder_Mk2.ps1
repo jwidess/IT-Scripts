@@ -1,7 +1,7 @@
 # Firewall_Block_All_Folder_Mk2.ps1
 # ---------------------------------------------
 # This script recursively finds all .exe files in the current directory and subdirectories,
-# displays the list and total count, and prompts the user for confirmation before adding
+# displays the list and total count, and prompts for confirmation before adding
 # Windows Firewall rules to block each .exe (both inbound and outbound).
 #
 # Inspired by: https://www.youtube.com/watch?v=4AH4SV7bGN0

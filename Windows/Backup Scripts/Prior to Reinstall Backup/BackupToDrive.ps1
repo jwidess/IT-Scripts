@@ -4,6 +4,7 @@
 # This script recursively backs up a set of directories to a specified location,
 # excluding paths based on directory list, search terms, and system file rules.
 # It removes NTFS permissions from copied files, and logs errors to CSV file.
+# Replace the parameters in the "Modify the following parameters as needed!" section.
 # ---------------------------------------------
 # Author: Jwidess
 # =============================================

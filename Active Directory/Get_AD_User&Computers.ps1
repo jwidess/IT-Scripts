@@ -1,4 +1,9 @@
-# Import Active Directory module if not already loaded
+# Get_AD_User&Computers.ps1
+# ---------------------------------------------
+# This script retrieves and displays all enabled and disabled users and computers
+# in Active Directory, along with their Organizational Units (OUs).
+# ---------------------------------------------
+
 Import-Module ActiveDirectory
 
 # Function to extract OU from DistinguishedName

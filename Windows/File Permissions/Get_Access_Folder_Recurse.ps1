@@ -1,8 +1,11 @@
+# Get_Access_Folder_Recurse.ps1
+# ---------------------------------------------
 # PowerShell script to take ownership and reset permissions recursively
 # Prompts for a folder path, then:
 # - Takes ownership of all files and folders
 # - Grants full control to the current user
 # - Removes all other permissions
+# ---------------------------------------------
 
 # Prompt for folder path
 $folderPath = Read-Host "Enter the full path to the folder you want to unlock"

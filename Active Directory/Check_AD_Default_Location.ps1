@@ -4,10 +4,8 @@
 # for new users and computers in the current domain.
 # ---------------------------------------------
 
-# Import Active Directory module
 Import-Module ActiveDirectory
 
-# Function to get default containers
 function Get-ADDefaultContainers {
     Write-Host "Checking default containers for new users and computers in Active Directory..." -ForegroundColor Cyan
 
@@ -25,6 +23,5 @@ function Get-ADDefaultContainers {
     }
 }
 
-# Execute the function
 Get-ADDefaultContainers
 pause

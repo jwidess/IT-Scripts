@@ -1,3 +1,8 @@
+# Get_License_Info.ps1
+# ---------------------------------------------
+# PowerShell script to retrieve Windows license information
+# ---------------------------------------------
+
 # Get OS info
 Write-Host "=== Windows License Information ===" -ForegroundColor Cyan
 $os = Get-CimInstance -ClassName Win32_OperatingSystem
