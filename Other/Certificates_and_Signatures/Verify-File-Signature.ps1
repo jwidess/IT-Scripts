@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    Verifies an executable or DLL's signature and trust chain.
+    Verifies an executable or DLL's signature and trust chain, alongside Zone Identifier.
 .DESCRIPTION
-    Runs both signtool.exe and Get-AuthenticodeSignature
+    Runs, signtool.exe, Get-AuthenticodeSignature, and checks for Zone.Identifier alternate data stream.
 #>
 
 # --- Locate signtool ---
@@ -73,5 +73,62 @@ if ($Signature.TimeStamperCertificate) {
     Write-Host "Timestamped By   : $($Signature.TimeStamperCertificate.Subject)"
 }
 Write-Host "`nVerification complete.`n" -ForegroundColor Cyan
+
+# --- Check Zone Identifier ---
+Write-Host "------------------------------------------------------------" -ForegroundColor DarkGray
+Write-Host "Checking Zone Identifier..." -ForegroundColor Cyan
+Write-Host "------------------------------------------------------------`n" -ForegroundColor DarkGray
+
+try {
+    $ZoneStream = Get-Item -Path $FilePath -Stream Zone.Identifier -ErrorAction Stop
+    
+    Write-Host "✅ Zone Identifier stream found!" -ForegroundColor Yellow
+    Write-Host "`nStream Details:" -ForegroundColor Cyan
+    Write-Host "  Length: $($ZoneStream.Length) bytes" -ForegroundColor White
+    
+    # Read the Zone Identifier content
+    $ZoneContent = Get-Content -Path $FilePath -Stream Zone.Identifier -ErrorAction Stop
+    
+    Write-Host "`nZone Identifier Content:" -ForegroundColor Cyan
+    $ZoneContent | ForEach-Object { Write-Host "  $_" -ForegroundColor White }
+    
+    # Parse and explain ZoneId if present
+    $ZoneIdLine = $ZoneContent | Where-Object { $_ -match '^ZoneId=(\d+)' }
+    if ($ZoneIdLine -match 'ZoneId=(\d+)') {
+        $ZoneId = $matches[1]
+        $ZoneDescription = switch ($ZoneId) {
+            "0" { "Local Machine (My Computer)" }
+            "1" { "Local Intranet" }
+            "2" { "Trusted Sites" }
+            "3" { "Internet (Downloaded from web)" }
+            "4" { "Restricted Sites" }
+            default { "Unknown Zone" }
+        }
+        Write-Host "`n  Interpretation: Zone $ZoneId = $ZoneDescription" -ForegroundColor Yellow
+        
+        if ($ZoneId -eq "3") {
+            Write-Host "  ⚠️  This file was downloaded from the Internet." -ForegroundColor Yellow
+        }
+    }
+    
+    # Check for HostUrl (download source)
+    $HostUrlLine = $ZoneContent | Where-Object { $_ -match '^HostUrl=' }
+    if ($HostUrlLine) {
+        Write-Host "`n  File downloaded from:" -ForegroundColor Cyan
+        Write-Host "  $($HostUrlLine -replace '^HostUrl=', '')" -ForegroundColor White
+    }
+    
+    # Check for ReferrerUrl
+    $ReferrerLine = $ZoneContent | Where-Object { $_ -match '^ReferrerUrl=' }
+    if ($ReferrerLine) {
+        Write-Host "`n  Referrer URL:" -ForegroundColor Cyan
+        Write-Host "  $($ReferrerLine -replace '^ReferrerUrl=', '')" -ForegroundColor White
+    }
+}
+catch {
+    Write-Host "ℹ️  No Zone Identifier found." -ForegroundColor Green
+}
+
+Write-Host "`n------------------------------------------------------------`n" -ForegroundColor DarkGray
 
 pause
