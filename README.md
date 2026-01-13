@@ -171,4 +171,5 @@ Microsoft-provided script to extend the Windows Recovery Environment (WinRE) par
 
 ## License
 
-These scripts are provided as-is for IT administration purposes. Use at your own risk and always test in a non-production environment first.
+GNU Affero General Public License v3
+> These scripts are provided as-is for IT administration purposes. Use at your own risk and always test in a non-production environment first.
