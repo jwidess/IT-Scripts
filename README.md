@@ -99,6 +99,9 @@ Comprehensive system information gathering script that collects hardware info (C
 #### Get_Disk_Info.ps1
 Gathers information about physical disks, partitions, and volumes, including SMART status via smartmontools if installed.
 
+#### Get_WSL_info.ps1
+Gathers information about the Windows Subsystem for Linux (WSL) installation, including the status of WSL features and installed distributions.
+
 ### Licensing Info
 
 #### Get_License_Info.ps1
