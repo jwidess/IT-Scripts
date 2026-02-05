@@ -91,10 +91,13 @@ Removes Windows Firewall blocking rules for all .exe files in the current direct
 #### OLD-Block Firewall All In Folder.bat
 Legacy batch script version that recursively blocks all .exe files in a folder using netsh commands.
 
-### Get Computer Info Script
+### Get Computer Info
 
 #### Get_Device_Info_V2.ps1
 Comprehensive system information gathering script that collects hardware info (CPU, RAM, BIOS, disks, GPU), network configuration, OS details, licensing information, and group policy results. Outputs to a compressed .zip file.
+
+#### Get_Disk_Info.ps1
+Gathers information about physical disks, partitions, and volumes, including SMART status via smartmontools if installed.
 
 ### Licensing Info
 
