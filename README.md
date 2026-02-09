@@ -50,6 +50,10 @@ Queries the NIST CVE API to gather information about specified CVE vulnerabiliti
 #### [GenerateHTTPS-URL-HTML.WinSCPextension.ps1](Other/WinSCP/GenerateHTTPS-URL-HTML.WinSCPextension.ps1)
 WinSCP extension that generates HTTPS URLs for selected files with the /html/ root path removed.
 
+### Certificates & Signatures
+#### [Verify-File-Signature.ps1](Other/Certificates_and_Signatures/Verify-File-Signature.ps1)
+Verifies an executable or DLL's signature and trust chain (runs signtool and PowerShell Authenticode checks) and inspects Zone.Identifier streams.
+
 ---
 
 ## Windows
@@ -106,6 +110,9 @@ Gathers information about the Windows Subsystem for Linux (WSL) installation, in
 
 #### [Get_License_Info.ps1](Windows/Licensing/Get_License_Info.ps1)
 Retrieves detailed Windows license and activation information including product key, license status, activation status, and volume licensing details.
+
+#### [Win11_Activate.ps1](Windows/Licensing/Win11_Activate.ps1)
+Display Windows 11 activation status and activate Windows by installing and applying a product key.
 
 ### List Installed Software
 
