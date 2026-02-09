@@ -14,6 +14,7 @@ echo ! In Windows 7 only CHKDSK and SFC work, the rest is new (Windows 8 +)
 echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 echo:
 
+:: Credit for the admin check below: https://stackoverflow.com/questions/1894967/how-to-request-administrator-access-inside-a-batch-file
 :: BatchGotAdmin
 :-------------------------------------
 REM  --> Check for permissions

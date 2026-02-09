@@ -117,14 +117,8 @@ Collects a list of installed software from both 32-bit and 64-bit registry locat
 #### Fix Internet after VPN.bat
 Deletes the 0.0.0.0 route and renews IP configuration to fix internet connectivity issues after disconnecting from VPN.
 
-#### Next Background.vbs
-VBScript to cycle to the next desktop background image in Windows slideshow.
-
 #### Real Time.bat
 Displays a continuously updating real-time clock in the command prompt window.
-
-#### Restart Explorer.bat
-Terminates and restarts Windows Explorer to fix shell-related issues.
 
 ### Registry
 

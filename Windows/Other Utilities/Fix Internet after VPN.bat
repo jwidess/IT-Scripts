@@ -2,6 +2,7 @@
 title Fixing the interwebs...
 color 09
 
+:: Credit for the admin check below: https://stackoverflow.com/questions/1894967/how-to-request-administrator-access-inside-a-batch-file
 :: BatchGotAdmin
 :-------------------------------------
 REM  --> Check for permissions
